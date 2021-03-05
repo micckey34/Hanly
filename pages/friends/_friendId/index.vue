@@ -10,12 +10,22 @@
 
 <script>
 export default {
+  async fetch() {
+    const { data } = await this.$axios.get(
+      '/api/friends/' + this.$route.params.friendId
+    )
+    this.nickname = data.nickname
+    this.latitude = data.pin ? data.pin.latitude : 0
+    this.longitude = data.pin ? data.pin.longitude : 0
+    this.datetime = data.pin ? data.pin.datetime : ''
+    this.face_image_url = data.face_image_url
+  },
   data() {
     return {
-      nickname: 'friend name',
-      latitude: 30,
-      longitude: 120,
-      datetime: new Date(),
+      nickname: '',
+      latitude: 0,
+      longitude: 0,
+      datetime: '',
       face_image_url: '',
     }
   },

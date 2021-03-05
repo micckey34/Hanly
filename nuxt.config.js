@@ -1,3 +1,5 @@
+const baseURL = 'https://hanly.herokuapp.com/'
+
 export default {
   /*
    ** Nuxt rendering mode
@@ -34,7 +36,7 @@ export default {
    ** Plugins to load before mounting the App
    ** https://nuxtjs.org/guide/plugins
    */
-  plugins: ['~/plugins/geolocation', '~/plugins/dayjs'],
+  plugins: ['~/plugins/geolocation', '~/plugins/dayjs', '~/plugins/axios'],
   /*
    ** Auto import components
    ** See https://nuxtjs.org/api/configuration-components
@@ -61,7 +63,12 @@ export default {
    ** Axios module configuration
    ** See https://axios.nuxtjs.org/options
    */
-  axios: {},
+  axios: {
+    baseURL,
+  },
+  env: {
+    baseURL,
+  },
   /*
    ** Build configuration
    ** See https://nuxtjs.org/api/configuration-build/

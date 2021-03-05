@@ -29,9 +29,7 @@
         alt
         :width="178"
       />
-      <p class="txt">
-        右下のボタンからピンを打って近くの友だちを探しましょう
-      </p>
+      <p class="txt">右下のボタンからピンを打って近くの友だちを探しましょう</p>
     </div>
     <button
       class="pin"
@@ -44,25 +42,16 @@
 
 <script>
 // 友だちデータ、サーバーからくるデータを模したもの
-const dummyFriends = [
-  {
-    id: 'dummy-id',
-    nickname: 'dummy-nickname',
-    face_image_url: '',
-    pin: {
-      datetime: new Date(),
-      latitude: 0,
-      longitude: 0,
-    },
-  },
-]
 
 export default {
+  async fetch() {
+    const { data } = await this.$axios.get('/api/friends')
+    this.friends = data
+  },
   data() {
     return {
       isPinning: false,
-      friends: dummyFriends,
-      face_image_url: '', // 自分の顔写真、実際はサーバーからとってくる
+      friends: [],
     }
   },
   computed: {
@@ -77,11 +66,18 @@ export default {
       }))
     },
   },
+  face_image_url() {
+    return this.$store.getters['me/face_image_url']
+  },
   methods: {
     async pin() {
       this.isPinning = true
       const { lat, lng } = await this.$getLocation()
-      console.log('緯度：' + lat, '経度：' + lng) // 実際はサーバーに緯度・経度を送信
+      const { data } = await this.$axios.post('/api/my/pin', {
+        latitude: lat,
+        longitude: lng,
+      })
+      this.friends = this.friends.concat(data)
       this.isPinning = false
     },
   },

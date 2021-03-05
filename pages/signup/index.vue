@@ -2,6 +2,7 @@
   <div class="wrap">
     <SignUpForm :is-sending="isSending" @submit="submit" />
     <BaseButton to="/" class="mts" is-txt>戻る</BaseButton>
+    <p v-if="error" class="error">{{ error }}</p>
   </div>
 </template>
 
@@ -9,15 +10,30 @@
 export default {
   data() {
     return {
+      error: '',
       isSending: false,
     }
   },
   methods: {
-    submit({ nickname, email, password }) {
-      // this.isSending を true にする
-      console.log(nickname, email, password)
-      // nickname, email, password を使ってサーバーにリクエスト
-      // this.isSending を false にする
+    async submit({ nickname, email, password }) {
+      this.isSending = true
+      try {
+        // 新規登録のAPIリクエスト
+        await this.$axios.post('/api/signup', {
+          nickname,
+          email,
+          password,
+        })
+        this.$router.push('/signin') // $router はルーティング操作 push はそのパスへのリンクを押したときと同じ処理
+      } catch (e) {
+        // try, catch で try 内でエラーが吐かれたら catch を実行するようにできる
+        this.isSending = false
+        this.error = '登録済みのメールアドレスです'
+        setTimeout(() => {
+          // 3秒たったらエラーを消す
+          this.error = ''
+        }, 3000)
+      }
     },
   },
 }

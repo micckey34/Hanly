@@ -49,8 +49,11 @@ export default {
       submit: '完了',
       cancel: 'キャンセル',
     }),
-    uploadUrl: () => 'https://httpbin.org/post', // 仮のURL
-    headers: () => ({}), // 仮のheader
+    uploadUrl: () => process.env.baseURL + '/api/me/image',
+    headers: () => ({
+      Authorization:
+        'Bearer ' + window.localStorage.getItem('hanly_access_token'),
+    }),
   },
   methods: {
     handleUploaded(res) {
